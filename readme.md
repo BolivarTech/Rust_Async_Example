@@ -110,7 +110,13 @@ allowing your application to remain responsive while handling a mix of I/O-bound
 
 ## This Repository
 
-On this Repository are implemented async examples using Tokio spawn and spawn_blocking as references.
+On this Repository are implemented asynchronous Rust examples using Tokio spawn and spawn_blocking as references.
+
+The code defines an asynchronous Rust application using the Tokio runtime. 
+It includes a main function that spawns multiple asynchronous tasks, such as async_fn, async_fn2, and long_cycle, 
+which perform asynchronous database reads and prime number calculations respectively. The PrimeVerification struct 
+is used to store the result of prime number checks, and a corresponding test module is present to verify the prime
+number detection logic.
 
 ## Conclusion
 
