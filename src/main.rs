@@ -48,46 +48,52 @@ struct PrimeVeryfication {
 
 async fn long_cycle()
 {
+    let find_range: u32 = 2_000_000;
     let num_taks = 8;
     let mut primes: Vec<u32> = Vec::new();
     let mut handles = Vec::new();
+    let mut value: u32 = 0;
 
-    for i in 2..1_000
-    {
-        if handles.len() < num_taks
+    println!("Long Calc Started!");
+    loop {
+        while (handles.len() <= num_taks) && (value <= find_range)
         {
-            let result = tokio::task::spawn_blocking(move ||{is_prime(i)});
+            let result = tokio::task::spawn_blocking(move || { is_prime(value) });
             handles.push(result);
-        } 
-        else 
+            value += 1;
+        }
+        loop
         {
-            let mut temphdl= Vec::new();
-            for handle  in handles.drain(0..num_taks)
+            let mut temphdl = Vec::new();
+            for handle in handles.drain(0..handles.len())
             {
                 if handle.is_finished() {
                     let result = handle.into_future().await.unwrap();
                     if result.is_prime {
                         primes.push(result.value);
                     }
-                } 
-                else 
-                {
+                } else {
                     temphdl.push(handle);
-                    //sleep(Duration::from_millis(5)).await; 
                 }
             }
             handles = temphdl;
-
+            if handles.len() < num_taks
+            {
+                break;
+            }
+        }
+        if handles.is_empty() && (value > find_range)
+        {
+            break;
         }
     }
-    
-    println!("Long Calc Finished!");
     println!("Prime Numbers");
     for i in primes
     {
         print!("{i},");
     }
     println!("\x08 ");
+    println!("Long Calc Finished!");
 }
 
 fn is_prime(n: u32) -> PrimeVeryfication {
