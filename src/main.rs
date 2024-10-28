@@ -113,3 +113,30 @@ fn is_prime(n: u32) -> PrimeVerification {
     respond.is_prime = true; // If no divisors are found, the number is prime
     respond
 }
+
+#[cfg(test)]
+mod tests
+{
+    use super::*;
+
+    #[test]
+    fn prime_number_test()
+    {
+        let primes: [u32; 25] = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 
+                                 61, 67, 71, 73, 79, 83, 89, 97];
+        let mut calc_primes: Vec<u32> = Vec::new();
+        for i in 0..101u32
+        {
+            let result = is_prime(i);
+            if result.is_prime
+            {
+                calc_primes.push(i);
+            }
+        }
+        assert_eq!(calc_primes.len(), primes.len(), "Prime Vector not have the same length");
+        for i in 0..primes.len()
+        {
+            assert_eq!(calc_primes[i], primes[i], "Prime number {} not found",calc_primes[i]);
+        }
+    }
+}
