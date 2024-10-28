@@ -41,14 +41,14 @@ async fn read_from_db(a: &str) -> String
     format!("DB Read from {a}").to_owned()
 }
 
-struct PrimeVeryfication {
+struct PrimeVerification {
     value: u32,
     is_prime: bool
 }
 
 async fn long_cycle()
 {
-    let find_range: u32 = 2_000_000;
+    let find_range: u32 = 100;
     let num_taks = 8;
     let mut primes: Vec<u32> = Vec::new();
     let mut handles = Vec::new();
@@ -64,19 +64,20 @@ async fn long_cycle()
         }
         loop
         {
-            let mut temphdl = Vec::new();
-            for handle in handles.drain(0..handles.len())
+            for index in 0..handles.len()
             {
-                if handle.is_finished() {
-                    let result = handle.into_future().await.unwrap();
-                    if result.is_prime {
-                        primes.push(result.value);
+                if let Some(handle) = handles.get(index) {
+                    if !handle.is_finished() {
+                        continue;
                     }
-                } else {
-                    temphdl.push(handle);
+                    let finished_handle = handles.remove(index);
+                    if let Ok(result) = finished_handle.into_future().await {
+                        if result.is_prime {
+                            primes.push(result.value);
+                        }
+                    }
                 }
             }
-            handles = temphdl;
             if handles.len() < num_taks
             {
                 break;
@@ -96,19 +97,19 @@ async fn long_cycle()
     println!("Long Calc Finished!");
 }
 
-fn is_prime(n: u32) -> PrimeVeryfication {
-    let mut respond = PrimeVeryfication {
+fn is_prime(n: u32) -> PrimeVerification {
+    let mut respond = PrimeVerification {
         value: n,
         is_prime: false,
     };
     if respond.value <= 1 {
         return respond;
     }
-    for a in 2..n {
+    for a in 2..=((n as f64).sqrt() as u32) {
         if respond.value % a == 0 {
-            return respond; // if it is not the last statement you need to use `return`
+            return respond; // Return immediately if a divisor is found
         }
     }
-    respond.is_prime = true; // last value to return
+    respond.is_prime = true; // If no divisors are found, the number is prime
     respond
 }
