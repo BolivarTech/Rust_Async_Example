@@ -1,5 +1,8 @@
 # Asynchronous Programming in Rust
 
+![Rust](https://img.shields.io/badge/Rust-1.82.0-blue)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
 Asynchronous programming in Rust allows you to write programs that can handle many tasks concurrently without being
 blocked by any single task. This is particularly useful for I/O-bound and task-bound operations.
 
