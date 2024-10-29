@@ -70,7 +70,7 @@ struct PrimeVerification {
 /// the prime numbers into a vector, and prints them.
 async fn long_cycle()
 {
-    let find_range: u32 = 10_000;
+    let find_range: u32 = 1_000_000;
     let num_task = 8;
     let mut primes: Vec<u32> = Vec::new();
     let mut handles = Vec::new();
